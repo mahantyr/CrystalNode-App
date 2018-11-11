@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Color theme for statusbar -->
+    <meta name="theme-color" content="#2196f3">
+    <!-- Your app title -->
+    <title>Crystal</title>
+    <!-- Path to Framework7 Library CSS -->
+    <link rel="stylesheet" href="css/framework7.min.css">
+    <link rel="stylesheet" href="css/framework7-icons.css">
+    <link rel="stylesheet" href="css/my-app.css">
+    <!-- Path to your custom app styles-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/cordova.js"></script>
+    <script type="text/javascript" src="js/socket.io.js"></script>
+    <script type="text/javascript" src="js/mbom.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        console.log(new Date())
+      })
+    </script>
+  </head>
+  <body  class="noselect theme-dark" >
+    <!-- App root element -->
+  <!-- Default view-page layout -->
+<!-- *********************************************** -->
+<div class="page">
+  <div class="navbar">
+    <div class="navbar-inner sliding color-red">
+      <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+      <div class="title">Manufacturing Bill of Material</div>
+    </div>
+  </div>
+  <div class="toolbar tabbar">
+    <div class="toolbar-inner">
+      <a href="#tab-1" class="tab-link tab-link-active">View</a>
+      <a href="#tab-2" class="tab-link">Add New</a>
+     
+    </div>
+  </div>
+  <div class="tabs">
+    <div id="tab-1" class="page-content tab tab-active">
+      <div class="block">
+
+        <p>View MBOM Database</p>
+        <div class="block-title">Enter Part Number to search:</div>
+        <div class="list inset">
+          <ul>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Part Number" id="searchbypart">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <p class="row">
+          <button class="col button button-fill color-orange" onclick="btn_search_part()">SEARCH</button>
+        </p>
+      
+         <div class="card demo-card-header-pic">
+                      <div class="card-header align-items-flex-end" id='print_partname'></div>
+                      <div class="card-content card-content-padding">
+                        <p id="print_partno" style="display:none"></p>
+                        <p class="print_date">Posted on January 21, 2015</p>
+                        <p id='print_man'></p>
+                        <p id='print_material'></p>
+                        <p id='print_qty'></p>
+                        <p id='print_deadline'></p>
+                        <p id='print_specs'></p>
+                        <p id='print_com'></p>
+                        <p id='print_dloc'></p>
+                        <p id='print_mod'></p>
+                        <p id='print_ploc'></p>
+                        <p id='print_sob'></p>
+                        <p id='print_sp'></p>
+                        <p id='print_vcode'></p>
+                      </div>
+                      <div class="card-footer"><a href="#" class="link mupdate">Update</a></div>
+                    </div>
+         
+      </div>
+    </div>
+    <div id="tab-2" class="page-content tab">
+      <div class="block">
+        
+        <p>Make addition to MBOM database</p>
+        <!--*************************Validation type form input*********************-->
+        
+        <div class="block-title">Enter Part Number to search:</div>
+        <div class="list inset">
+          <ul>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Part Number">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <p class="row">
+          <button class="col button button-fill color-orange">SEARCH</button>
+        </p>
+
+
+        <div>
+           <div class="card demo-card-header-pic">
+                      <div class="card-header">part no.</div>
+                      <div class="card-content card-content-padding">
+                        <div class="list no-hairlines-md">
+          <ul>
+            <li class="item-content item-input item-input-with-info">
+             
+              <div class="item-inner">
+                <div class="item-title item-label">Part Number</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Part Number here" required validate id="epartno">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default "required" validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+            
+              <div class="item-inner">
+                <div class="item-title item-label">Part Name</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Part Name here" required validate id="epartname">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Pattern validation (<b>apple|banana</b>)</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+              
+              <div class="item-inner">
+                <div class="item-title item-label">Quantity</div>
+                <div class="item-input-wrap">
+                  <input type="number" placeholder="Enter Quantity here" required validate id="eqty">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default e-mail validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+             
+              <div class="item-inner">
+                <div class="item-title item-label">Deadline</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Deadline here" required validate id="edeadline">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+
+            </li>
+            <li class="item-content item-input item-input-with-info">
+              
+              <div class="item-inner">
+                <div class="item-title item-label">Material Used</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Material Used here" required validate id="ematerial">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+             
+              <div class="item-inner">
+                <div class="item-title item-label">Specification</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Specification here" required validate id="especs">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+              
+              <div class="item-inner">
+                <div class="item-title item-label">Manufacturing Type</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Manufacturing Type here" required validate id="emanufacture">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+                      </div>
+                      <div class="card-footer"><a href="#"><p class="date">Posted on January 21, 2015</p></a></div>
+                    </div>
+        </div>
+
+        <div class="block-title">Enter Rest of the Details</div>
+
+        <div class="list no-hairlines-md">
+          <ul>
+            <li class="item-content item-input item-input-with-info">
+             
+              <div class="item-inner">
+                <div class="item-title item-label">Company Code</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Company Code here" required validate id="mcom">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default "required" validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+            
+              <div class="item-inner">
+                <div class="item-title item-label">Plant Location</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Plant Location here" required validate id="mploc">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Pattern validation (<b>apple|banana</b>)</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+              
+              <div class="item-inner">
+                <div class="item-title item-label">Vendor Code</div>
+                <div class="item-input-wrap">
+                  <input type="number" placeholder="Enter Vendor Code here" required validate id="mvcode">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default e-mail validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+             
+              <div class="item-inner">
+                <div class="item-title item-label">Share of Business</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Share of Business here" required validate id="msob">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+
+            </li>
+            <li class="item-content item-input item-input-with-info">
+              
+              <div class="item-inner">
+                <div class="item-title item-label">Delivery Location</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Delivery Location here" required validate id="mdloc">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+             
+              <div class="item-inner">
+                <div class="item-title item-label">Supply Plan</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Supply Plan here" required validate id="msp">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input item-input-with-info">
+              
+              <div class="item-inner">
+                <div class="item-title item-label">Modification</div>
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Enter Modification here" required validate id="mmod">
+                  <span class="input-clear-button"></span>
+                  <div class="item-input-info">Default text validation</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <p class="row">
+          <button class="col button color-red">Reset</button>
+          <button class="col button color-green" onclick="submit()">Save</button>
+        </p>
+        <!--**************************-->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- *********************************************** -->
+    <!-- Path to Framework7 Library JS-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/framework7.min.js"></script>
+    <!-- Path to your app js-->
+    <script type="text/javascript" src="js/my-app.js"></script>
+  </body>
+</html>

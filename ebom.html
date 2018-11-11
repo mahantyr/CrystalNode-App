@@ -18,6 +18,7 @@
     <script type="text/javascript" src="js/cordova.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
     <script type="text/javascript" src="js/ebom.js"></script>
+    <script type="text/javascript" src="js/logout.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         console.log(new Date())
@@ -32,7 +33,7 @@
   <div class="navbar">
     <div class="navbar-inner sliding">
       <div class="left">
-          <a href="#" class="link back">
+          <a href="#" class="link back" onclick="logout()">
             <i class="icon icon-back"></i>
             <span class="ios-only">Back</span>
           </a>
@@ -72,9 +73,9 @@
          <div class="card demo-card-header-pic">
                       <div class="card-header align-items-flex-end" id='print_partname'></div>
                       <div class="card-content card-content-padding">
-                        <p><u><b>Part No.</u>></b></p>
+                        <p><u><b>Part No.</u></b></p>
                         <p id="print_partno" style="display:none"></p>
-                        <p class="print_date">Posted on January 21, 2015</p>
+                        <p class="print_date"></p>
                         <p id='print_man'></p>
                         <p id='print_material'></p>
                         <p id='print_qty'></p>

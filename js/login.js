@@ -31,7 +31,7 @@ function onBackKeyDown() {
  
 function loginUser(userid,password) {
         console.log("sds")
-        url="http://192.168.43.230:4000"
+        url="http://localhost:4000"
         $.ajax({
         type:'post',
         url:url,

@@ -18,6 +18,7 @@
     <script type="text/javascript" src="js/cordova.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
     <script type="text/javascript" src="js/mbom.js"></script>
+    <script type="text/javascript" src="js/logout.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         console.log(new Date())
@@ -32,7 +33,7 @@
   <div class="navbar">
     <div class="navbar-inner sliding color-red">
       <div class="left">
-          <a href="#" class="link back">
+          <a href="#" class="link" onclick="logout()">
             <i class="icon icon-back"></i>
             <span class="ios-only">Back</span>
           </a>

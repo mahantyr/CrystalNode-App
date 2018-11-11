@@ -32,9 +32,14 @@ $(document).ready(function(){
 		$('#print_specs').text(data.query.specs)
 		$('#print_partno').empty()
 		$('#print_partno').text(data.query.part_no)
+		$('.print_date').empty()
+		$('.print_date').text(data.query.date)
 		$(".eapprove").attr(onclick,"")
+		console.log(data.query.status)
 		if(data.query.status=='pending') {
 			$('.estatus').show()
+		} else {
+			$('.estatus').hide()
 		}
 		//$(".eapprove").attr(onclick,"approve_ebom(\""+data.query.partno+"\")")
 
@@ -50,6 +55,7 @@ $(document).ready(function(){
 		$("#epartno").val(partno)
 		$("#epartname").val(partname)
 		update=true
+		console.log(update)
 		$(".add_new")[0].click()
 	}
 	})
@@ -64,6 +70,7 @@ function submit () {
 	var specs=$("#especs").val()
 	var manufacture=$("#emanufacture").val()
 	var date= new Date()
+	console.log(update)
 	if(partno.length>0 & partname.length>0 & qty.length>0 & deadline.length>0 & material.length>0 & specs.length>0 & manufacture.length>0) { 
 	var newdata={part_no:partno,partname:partname,qty:qty,deadline:deadline,material:material,specs:specs,manufacture:manufacture,toUpdate:update,status:false,date:date};
 	socket.emit('ebom_attr',newdata)

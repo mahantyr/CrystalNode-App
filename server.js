@@ -2,17 +2,15 @@ var MongoClient = require('mongodb').MongoClient;
 var http=require('http');
 var url = "mongodb://localhost:27017/";
 var dbo=null
-var express=require('express')
 var app=require('express')()
 var http=require('http').Server(app)
 var io=require('socket.io')(http)
 var cors=require('cors')
 //app.use(express.bodyParser());
 app.use(cors())
-app.use('/',express.static('/root/CrystalNode-App'))
-app.get('/',function(req,res){
-      res.sendFile('login.html', { root : __dirname});
-});
+/*app.get('/',function(req,res){
+  res.sendFile('login.html',{root : __dirname});
+})*/
 app.post('/',function(req,res){
   var jsonString=''
   req.on('data', function (data) {
@@ -32,7 +30,7 @@ io.on('connection',function(socket){
   id=socket.id
   console.log(id)
   socket.on('ebom_attr',function(data){
-    if(!data.toUpdate) {
+    if(data.toUpdate==false) {
     addBomData(data,'ebom',id)
   } else {
     updateEbom(data,id)
@@ -59,8 +57,12 @@ io.on('connection',function(socket){
    socket.on('change_on_approval',function(data){
     updateEbom({part_no:part_no},'ebom',id,data)
    })
-   socket.on('approve_ebom',function(id){
-    updateEbomStatus(id)
+   socket.on('approve_ebom',function(id2){
+    updateEbomStatus(id2,id)
+   })
+   socket.on('check_mstatus',function(id2){
+    console.log(id2)
+    updateMbomStatus(id2,id)
    })
 })
 
@@ -158,15 +160,16 @@ io.on('connection',function(socket){
       dbo.collection('ebom').find(query).toArray(function(err, result) {
       if (err) throw err;
     
-        console.log(result)
+        console.log(result.length)
         if(result.length > 0) {
          id=result[0]._id
+         console.log(id)
          data.ebom=result[0]
-         dbo.collection(c_type).find({ebom_id:id}).toArray(function(err, result) {
+         dbo.collection('mbom').find({ebom_id:id}).toArray(function(err, result2) {
          if (err) throw err;
-        // console.log('mbom:-',result)
+         console.log('mbom:-',result2)
         if(result.length>0) {
-         data.mbom=result[0]
+         data.mbom=result2[0]
          data.success=true
         } 
           //res.send(obj)
@@ -226,15 +229,40 @@ io.on('connection',function(socket){
     }); 
   }
 
-function updateEbomStatus(id) {
+function updateEbomStatus(id2,id) {
   console.log(id)
    MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     dbo = db.db("bom");
-    dbo.collection("ebom").updateOne({part_no:id},{$set: {status:true}}, function(err, res) {
+    dbo.collection("ebom").updateOne({part_no:id2},{$set: {status:true}}, function(err, res) {
       if (err) throw err;
       console.log(res)
       io.to(id).emit('change_status',{success:true})
+      db.close();
+      });
+    }); 
+}
+
+function updateMbomStatus(id2,id) {
+
+   MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      dbo = db.db("bom");
+      dbo.collection("ebom").find({part_no:id2}).toArray(function(err, result) {
+      if (err) throw err;
+    
+        console.log(result)
+        if(result.length > 0) {
+          if(result[0].status==false) {
+            dbo.collection("ebom").updateOne({part_no:id2},{$set: {status:"pending"}},function(err, result2) {
+      if (err) throw err;
+    
+        io.to(id).emit('mbom_status',{status:result[0].status})
+      })
+          }
+          //res.send(obj)
+        }
+
       db.close();
       });
     }); 

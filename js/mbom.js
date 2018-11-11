@@ -59,6 +59,10 @@ socket.on('mbom_data',function(data){
 		alert("false")
 	}
 	})
+$(".mupdate").click(function(){
+	var part=$("#print_partno").text()
+	socket.emit('check_mstatus',part)
+})
 })
 function submit () {
 	var partno=$("#epartno").val()
@@ -93,3 +97,4 @@ if(value.length>0) {
 	socket.emit('read_mbom',{part_no:value})
 }
 }
+

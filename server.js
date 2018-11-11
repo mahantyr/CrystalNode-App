@@ -2,12 +2,17 @@ var MongoClient = require('mongodb').MongoClient;
 var http=require('http');
 var url = "mongodb://localhost:27017/";
 var dbo=null
+var express=require('express')
 var app=require('express')()
 var http=require('http').Server(app)
 var io=require('socket.io')(http)
 var cors=require('cors')
 //app.use(express.bodyParser());
 app.use(cors())
+app.use('/',express.static('/root/CrystalNode-App'))
+app.get('/',function(req,res){
+      res.sendFile('login.html', { root : __dirname});
+});
 app.post('/',function(req,res){
   var jsonString=''
   req.on('data', function (data) {

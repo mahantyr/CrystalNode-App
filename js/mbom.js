@@ -11,6 +11,8 @@ socket.on('mbom_return',function(msg){
 				$("#ematerial").val("")
 				$("#especs").val("")
 				$("#emanufacture").val("")
+				$("#eopr").val("")
+				$("#epro").val("")
 				$("#mcom").val("")
 				$("#mploc").val("")
 				$("#mvcode").val("")
@@ -37,6 +39,10 @@ socket.on('mbom_data',function(data){
 		$('#print_deadline').text(data.ebom.deadline)
 		$('#print_specs').empty()
 		$('#print_specs').text(data.ebom.specs)
+		$('#print_opr').empty()
+		$('#print_opr').text(data.ebom.opr)
+		$('#print_pro').empty()
+		$('#print_pro').text(data.ebom.pro)
 		$('#print_partno').empty()
 		$('#print_partno').text(data.ebom.part_no)
 
@@ -72,6 +78,8 @@ function submit () {
 	var material=$("#ematerial").val()
 	var specs=$("#especs").val()
 	var manufacture=$("#emanufacture").val()
+	var opr=$("#eopr").val()
+	var pro=$("#epro").val()
 	var com=$("#mcom").val()
 	var ploc=$("#mploc").val()
 	var vcode=$("#mvcode").val()
@@ -80,8 +88,8 @@ function submit () {
 	var sp=$("#msp").val()
 	var mod=$("#mmod").val()
 
-	if(partno.length>0 && partname.length>0 && qty.length>0 && deadline.length>0 && material.length>0 && specs.length>0 && manufacture.length>0 && com.length>0 && ploc.length>0 && vcode.length>0 && sob.length>0 && dloc.length>0 && sp.length>0 && mod.length>0) { 
-	var newdata={part_no:partno,partname:partname,qty:qty,deadline:deadline,material:material,specs:specs,manufacture:manufacture,com:com,ploc:ploc,vcode:vcode,sob:sob,dloc:dloc,sp:sp,mod:mod};
+	if(partno.length>0 && partname.length>0 && qty.length>0 && deadline.length>0 && material.length>0 && specs.length>0 && manufacture.length>0 && com.length>0 && ploc.length>0 && vcode.length>0 && sob.length>0 && dloc.length>0 && sp.length>0 && mod.length>0 & opr.length>0 & pro.length>0) { 
+	var newdata={part_no:partno,partname:partname,qty:qty,deadline:deadline,material:material,specs:specs,manufacture:manufacture,opr:opr,pro:pro,com:com,ploc:ploc,vcode:vcode,sob:sob,dloc:dloc,sp:sp,mod:mod};
 	socket.emit('mbom_attr',newdata)
 } else {
 	alert("some box is empty")

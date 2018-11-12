@@ -47,6 +47,11 @@ io.on('connection',function(socket){
     console.log(data)
     readEbomData({part_no:data.part_no},'ebom',id)
   })
+socket.on('read_ebom_full',function(data){
+    console.log(data)
+    readData1()
+  })
+
    socket.on('read_mbom',function(data){
     console.log(data)
     readMbomData({part_no:data.part_no},'mbom',id)
@@ -71,7 +76,7 @@ io.on('connection',function(socket){
 
       MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    dbo = db.db("bom");
+    dbo = db.db("bom1");
 
       dbo.collection(bom_type).insertOne(data, function(err, res) {
       if (err) 
@@ -93,8 +98,8 @@ io.on('connection',function(socket){
 
     MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    dbo = db.db("bom");
-    var newvalues = { $set: {qty:query.qty,deadline:query.deadline,material:query.material,specs:query.specs,manufacture:query.manufacture,status:false,date:query.date} };
+    dbo = db.db("bom1");
+    var newvalues = { $set: {qty:query.qty,deadline:query.deadline,material:query.material,specs:query.specs,manufacture:query.manufacture,opr:querry.opr,pro:querry.pro,status:false,date:query.date} };
     dbo.collection("ebomd").updateOne({part_no:query.part_no}, newvalues, function(err, res) {
       if (err) throw err;
       io.to(id).emit('change_status',{success:true})
@@ -107,7 +112,7 @@ io.on('connection',function(socket){
     var data={success:false}
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      dbo = db.db("bom");
+      dbo = db.db("bom1");
       dbo.collection(c_type).find(query).toArray(function(err, result) {
       if (err) throw err;
     
@@ -128,12 +133,37 @@ io.on('connection',function(socket){
 
   }
 
+  function readData1(){
+    var data={success:false}
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      dbo = db.db("bom1");
+      dbo.collection('ebom').find().toArray(function(err, result) {
+      if (err) throw err;
+    
+        console.log(result)
+        if(result.length > 0) {
+         // var obj=new Object()
+          //obj.userid=result[0].userid
+          //obj.type=result[0].type
+          //obj.success=true
+          var data=result
+          //res.send(obj)
+        }
+             db.close();
+       
+   io.emit('ebom_data_full',data)
+      });
+    }); 
+
+  }
+
 
   function readEbomData(query,c_type,id){
     var data={success:false}
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      dbo = db.db("bom");
+      dbo = db.db("bom1");
       dbo.collection(c_type).find(query).toArray(function(err, result) {
       if (err) throw err;
     
@@ -156,7 +186,7 @@ io.on('connection',function(socket){
     var data={success:false}
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      dbo = db.db("bom");
+      dbo = db.db("bom1");
       dbo.collection('ebom').find(query).toArray(function(err, result) {
       if (err) throw err;
     
@@ -192,7 +222,7 @@ io.on('connection',function(socket){
     var data={success:false}
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      dbo = db.db("bom");
+      dbo = db.db("bom1");
       dbo.collection(c_type).find(query).toArray(function(err, result) {
       if (err) { throw err };
     
@@ -233,7 +263,7 @@ function updateEbomStatus(id2,id) {
   console.log(id)
    MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    dbo = db.db("bom");
+    dbo = db.db("bom1");
     dbo.collection("ebom").updateOne({part_no:id2},{$set: {status:true}}, function(err, res) {
       if (err) throw err;
       console.log(res)
@@ -247,7 +277,7 @@ function updateMbomStatus(id2,id) {
 
    MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      dbo = db.db("bom");
+      dbo = db.db("bom1");
       dbo.collection("ebom").find({part_no:id2}).toArray(function(err, result) {
       if (err) throw err;
     

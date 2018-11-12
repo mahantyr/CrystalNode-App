@@ -100,7 +100,7 @@ socket.on('read_ebom_full',function(data){
     if (err) throw err;
     dbo = db.db("bom1");
     var newvalues = { $set: {qty:query.qty,deadline:query.deadline,material:query.material,specs:query.specs,manufacture:query.manufacture,opr:querry.opr,pro:querry.pro,status:false,date:query.date} };
-    dbo.collection("ebomd").updateOne({part_no:query.part_no}, newvalues, function(err, res) {
+    dbo.collection("ebom").updateOne({part_no:query.part_no}, newvalues, function(err, res) {
       if (err) throw err;
       io.to(id).emit('change_status',{success:true})
       db.close();
